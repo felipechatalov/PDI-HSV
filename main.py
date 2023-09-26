@@ -6,8 +6,6 @@ import numpy as np
 # int m de matiz, 0 a 360
 # int x de faixa, onde se substitui m-x ate m+x
 
-
-
 # 1920x1080 with some room to no crop at the top and bottom of the screen and proper aspect ratio
 WIDTH_CAP = 1635
 HEIGHT_CAP = 920
@@ -39,6 +37,7 @@ def try_resize_to_fit_screen(img):
     return img
 
 def invert_hue(img, m, x):
+
     # convert to hsv
     hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
     # split channels
@@ -48,12 +47,13 @@ def invert_hue(img, m, x):
     # wont work with m =~ 0 or m =~ 360
 
     # find hue in range m-x to m+x
-    #hlow = m - x if m - x >= 0 else m-x + 360
-    #hhigh = m + x if m + x <= 360 else m+x - 360
-    #print('hlow: {}, hhigh: {}'.format(hlow, hhigh))
-    #hmask = cv2.inRange(h, hlow, hhigh)
-    print('hlow: {}, hhigh: {}'.format(m-x, m+x))
-    hmask = cv2.inRange(h, m-x, m+x)
+    # hlow = m - x if m - x >= 0 else m-x + 360
+    # hhigh = m + x if m + x <= 360 else m+x - 360
+    hlow = m-x
+    hhigh = m+x
+
+    print('hlow: {}, hhigh: {}'.format(hlow, hhigh))
+    hmask = cv2.inRange(h, hlow, hhigh)
 
     h[hmask > 0] = (h[hmask > 0] + 180) % 360
 
@@ -83,8 +83,10 @@ def main():
     img_path = sys.argv[1]
     m = int(sys.argv[2])
     x = int(sys.argv[3])
-    img = cv2.imread(img_path)
 
+
+    img = cv2.imread(img_path)
+    
     #img to rgb 
     #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
